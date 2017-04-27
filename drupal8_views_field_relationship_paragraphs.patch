@@ -1,0 +1,47 @@
+diff --git a/core/modules/views/src/Plugin/views/query/Sql.php b/web/core/modules/views/src/Plugin/views/query/Sql.php
+index cfe593c..0aad52b 100644
+--- a/core/modules/views/src/Plugin/views/query/Sql.php
++++ b/core/modules/views/src/Plugin/views/query/Sql.php
+@@ -1925,4 +1925,42 @@ public function getDateFormat($field, $format, $string_date = FALSE) {
+     }
+   }
+ 
++  /**
++   * A bug arises when making a relation in a view to a field referencing a 
++   * paragraph: the "joins" in the query are not being built well and they are
++   * trying to match entity ids with revisions ids, producing misbehaviours and 
++   * unexpected results. Here we make sure that the relation is stablished by 
++   * the entity ids.
++   * @param $table
++   *   The name of the table corresponding to the field containing the reference
++   *   to the paragraph.   
++   */
++  public function tableQueueParagraphRelationAlter($table) {    
++    foreach($this->tableQueue as $key => $data) {
++      if (!empty($data['join'])) {
++        
++        if ($data['join']->table == $table && $data['join']->leftTable == 'paragraphs_item_field_data') {
++          $this->tableQueue[$key]['join']->field = 'field_events_target_id';
++          $this->tableQueue[$key]['join']->leftField = 'id';
++        }
++        
++        if ($data['join']->table == 'paragraphs_item_field_data' && $data['join']->leftTable == $table) {
++          $this->tableQueue[$key]['join']->field = 'id';
++          $this->tableQueue[$key]['join']->leftField = 'field_events_target_id';
++        }     
++               
++        if ($data['join']->table == $table && $data['join']->leftTable == 'node_field_data') {
++          $this->tableQueue[$key]['join']->field = 'entity_id';
++          $this->tableQueue[$key]['join']->leftField = 'nid';
++        }
++        
++        if ($data['join']->table == 'node_field_data' && $data['join']->leftTable == $table) {
++          $this->tableQueue[$key]['join']->field = 'nid';
++          $this->tableQueue[$key]['join']->leftField = 'entity_id';
++        }
++        
++      }
++    }    
++  }
++  
+ }
