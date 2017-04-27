@@ -1,7 +1,7 @@
-diff --git a/web/core/modules/views/src/Plugin/views/query/Sql.php b/web/core/modules/views/src/Plugin/views/query/Sql.php
+diff --git a/core/modules/views/src/Plugin/views/query/Sql.php b/web/core/modules/views/src/Plugin/views/query/Sql.php
 index cfe593c..0aad52b 100644
---- a/web/core/modules/views/src/Plugin/views/query/Sql.php
-+++ b/web/core/modules/views/src/Plugin/views/query/Sql.php
+--- a/core/modules/views/src/Plugin/views/query/Sql.php
++++ b/core/modules/views/src/Plugin/views/query/Sql.php
 @@ -1925,4 +1925,42 @@ public function getDateFormat($field, $format, $string_date = FALSE) {
      }
    }
