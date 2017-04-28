@@ -16,18 +16,18 @@ index cfe593c..0aad52b 100644
 +   *   The name of the table corresponding to the field containing the reference
 +   *   to the paragraph.   
 +   */
-+  public function tableQueueParagraphRelationAlter($table) {    
++  public function tableQueueParagraphRelationAlter($table, $field) {
 +    foreach($this->tableQueue as $key => $data) {
 +      if (!empty($data['join'])) {
 +        
 +        if ($data['join']->table == $table && $data['join']->leftTable == 'paragraphs_item_field_data') {
-+          $this->tableQueue[$key]['join']->field = 'field_events_target_id';
++          $this->tableQueue[$key]['join']->field = $field . '_target_id';
 +          $this->tableQueue[$key]['join']->leftField = 'id';
 +        }
 +        
 +        if ($data['join']->table == 'paragraphs_item_field_data' && $data['join']->leftTable == $table) {
 +          $this->tableQueue[$key]['join']->field = 'id';
-+          $this->tableQueue[$key]['join']->leftField = 'field_events_target_id';
++          $this->tableQueue[$key]['join']->leftField = $field . '_target_id';
 +        }     
 +               
 +        if ($data['join']->table == $table && $data['join']->leftTable == 'node_field_data') {
