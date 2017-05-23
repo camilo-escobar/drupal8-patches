@@ -1,7 +1,7 @@
-diff --git a/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php b/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
+diff --git a/src/PathProcessor/PurlContextOutboundPathProcessor.php b/src/PathProcessor/PurlContextOutboundPathProcessor.php
 index 4a6f199..a5af09b 100644
---- a/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
-+++ b/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
+--- a/src/PathProcessor/PurlContextOutboundPathProcessor.php
++++ b/src/PathProcessor/PurlContextOutboundPathProcessor.php
 @@ -28,13 +28,16 @@
  
      public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL)
