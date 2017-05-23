@@ -1,0 +1,27 @@
+diff --git a/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php b/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
+index 4a6f199..a5af09b 100644
+--- a/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
++++ b/modules/contrib/purl/src/PathProcessor/PurlContextOutboundPathProcessor.php
+@@ -28,13 +28,16 @@
+ 
+     public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL)
+     {
++        // The 'purl' cache context is always added (provided that 
++        // $bubbleable_metadata is not empty), so that all the outbound paths
++        // are built based on the matched modifier
++        if ($bubbleable_metadata) {
++          $cacheContexts = $bubbleable_metadata->getCacheContexts();
++          $cacheContexts[] = 'purl';
++          $bubbleable_metadata->setCacheContexts($cacheContexts);          
++        }
++        
+         if (array_key_exists('purl_context', $options) && $options['purl_context'] == false) {
+-
+-            if (count($this->events) && $bubbleable_metadata) {
+-                $cacheContexts = $bubbleable_metadata->getCacheContexts();
+-                $cacheContexts[] = 'purl';
+-                $bubbleable_metadata->setCacheContexts($cacheContexts);
+-            }
+ 
+             foreach ($this->events as $event) {
+                 $path = $this->exitContext($event, $path, $options);
