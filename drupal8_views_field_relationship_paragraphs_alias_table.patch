@@ -1,0 +1,54 @@
+diff --git a/core/modules/views/src/Plugin/views/query/Sql.php b/core/modules/views/src/Plugin/views/query/Sql.php
+index 363f3f3..e57f26b 100644
+--- a/core/modules/views/src/Plugin/views/query/Sql.php
++++ b/core/modules/views/src/Plugin/views/query/Sql.php
+@@ -1936,31 +1936,44 @@ public function getDateFormat($field, $format, $string_date = FALSE) {
+    *   to the paragraph.   
+    */
+   public function tableQueueParagraphRelationAlter($table, $field) {
++    // Let's build first an array which keys are alias and values are the real
++    // table names
++    $alias_table = [];    
++    foreach($this->tableQueue as $values) {
++      $alias_table[$values['alias']] = $values['table'];      
++    }
++    
+     foreach($this->tableQueue as $key => $data) {
+       if (!empty($data['join'])) {
++        $join_table = $data['join']->table;
++        $join_left_table = $data['join']->leftTable;
++        
++        if (isset($alias_table[$join_left_table])) {
++          $aliased_left_table = $alias_table[$join_left_table];
++        }
+         
+-        if ($data['join']->table == $table && $data['join']->leftTable == 'paragraphs_item_field_data') {
++        if ($join_table == $table && ($join_left_table == 'paragraphs_item_field_data' || $aliased_left_table == 'paragraphs_item_field_data') ) {
+           $this->tableQueue[$key]['join']->field = $field . '_target_id';
+           $this->tableQueue[$key]['join']->leftField = 'id';
+         }
+         
+-        if ($data['join']->table == 'paragraphs_item_field_data' && $data['join']->leftTable == $table) {
++        if ($join_table == 'paragraphs_item_field_data' && ($join_left_table == $table || $aliased_left_table == $table)) {
+           $this->tableQueue[$key]['join']->field = 'id';
+           $this->tableQueue[$key]['join']->leftField = $field . '_target_id';
+         }     
+                
+-        if ($data['join']->table == $table && $data['join']->leftTable == 'node_field_data') {
++        if ($join_table == $table && ($join_left_table == 'node_field_data' || $aliased_left_table == 'node_field_data')) {
+           $this->tableQueue[$key]['join']->field = 'entity_id';
+           $this->tableQueue[$key]['join']->leftField = 'nid';
+         }
+         
+-        if ($data['join']->table == 'node_field_data' && $data['join']->leftTable == $table) {
++        if ($join_table == 'node_field_data' && ($join_left_table == $table || $aliased_left_table == $table)) {
+           $this->tableQueue[$key]['join']->field = 'nid';
+           $this->tableQueue[$key]['join']->leftField = 'entity_id';
+         }
+         
+       }
+-    }    
++    }
+   }
+   
+ }
