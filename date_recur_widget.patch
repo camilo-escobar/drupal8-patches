@@ -221,9 +221,11 @@ index 19ace9a..aaa1d3a 100644
 -      tmpl += '<label for="output">';
 -      tmpl += Drupal.t('Summary', {}, {context: 'Date recur'})
 -      tmpl += ': <em class="text-output"></em></label>'; // human readable
+-      tmpl += '<label>' + Drupal.t('RRule') + ':<code class="rrule-output"></code></label>'; // ugly rrule
 +      tmpl += '<label class="resume-recurrency" for="output">';
 +      tmpl += Drupal.t('Summary', {}, {context: 'Date recur'});
 +      tmpl += ': <span class="text-output"></span></label>'; // human readable
++      //tmpl += '<label>' + Drupal.t('RRule') + ':<code class="rrule-output"></code></label>'; // ugly rrule
  
        //TODO: show next few instances to help user debug
  
