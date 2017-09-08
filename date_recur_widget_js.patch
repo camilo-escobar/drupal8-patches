@@ -1,0 +1,304 @@
+diff --git a/assets/date_recur_rrule.widget.js b/assets/date_recur_rrule.widget.js
+index 19ace9a..aaa1d3a 100644
+--- a/assets/date_recur_rrule.widget.js
++++ b/assets/date_recur_rrule.widget.js
+@@ -43,13 +43,13 @@
+   ];
+   RRule.DAYCODES = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+   RRule.DAYNAMES = [
+-    Drupal.t('Monday'),
+-    Drupal.t('Tuesday'),
+-    Drupal.t('Wednesday'),
+-    Drupal.t('Thursday'),
+-    Drupal.t('Friday'),
+-    Drupal.t('Saturday'),
+-    Drupal.t('Sunday')
++    Drupal.t('Mon'),
++    Drupal.t('Tue'),
++    Drupal.t('Wed'),
++    Drupal.t('Thu'),
++    Drupal.t('Fri'),
++    Drupal.t('Sat'),
++    Drupal.t('Sun')
+   ];
+ 
+   RRule.MONTHS = [
+@@ -94,11 +94,11 @@
+       //set up inputs
+       var tmpl = '';
+       //frequency
+-      tmpl += '<div class="container-inline">';
++      tmpl += '<div class="start-options container-inline">';
+       tmpl += '<label class="controls">'
+         + Drupal.t('Repeat', {}, {context: 'Date recur'})
+         + ' ';
+-      tmpl += '<select name="freq">';
++      tmpl += '<select name="freq" data-placeholder="'+ Drupal.t('Select a frecuency', {}, {context: 'Date recur'}) +'">';
+       _.each(RRule.FREQUENCIES, function (element, index) {
+         var f = RRule[element];
+         tmpl += '<option value=' + f + ' data-freq-base="' + element.toLowerCase() + '">' + RRule.FREQUENCY_ADVERBS[index] + '</option>';
+@@ -106,12 +106,11 @@
+       tmpl += '</select>';
+       tmpl += '</label>';
+ 
+-
+       tmpl += '<label class="controls"> ';
+-      tmpl += Drupal.t('every', {}, {context: 'Date recur'})
+-      tmpl += ' <input type="number" value="1" min="1" max="100" name="interval"/>';
++      tmpl += Drupal.t('Every', {}, {context: 'Date recur'})
++      tmpl += '<div><input type="number" value="1" min="1" max="100" name="interval"/>';
+       tmpl += '&nbsp;<span id="frequency_name"></span>';
+-      tmpl += '</label>';
++      tmpl += '</div></label>';
+       tmpl += '</div>';
+ 
+       // repeat options, frequency specific
+@@ -120,7 +119,7 @@
+       //bymonth: weekdays
+       tmpl += '<div class="repeat-options controls container-inline" data-freq="monthly">';
+       tmpl += '<label for="byweekday-pos">';
+-      tmpl += Drupal.t('On the', {}, {context: 'Date recur: weekday in month'})
++      tmpl += Drupal.t('Repeat on', {}, {context: 'Date recur: weekday in month'})
+       tmpl += '</label>';
+       tmpl += ' <div class="byweekday-pos-container"><span class="byweekday-pos-text"></span>';
+       tmpl += ' <div class="byweekday-pos-input">';
+@@ -131,97 +130,120 @@
+       tmpl += '</div>';
+       _.each(RRule.DAYCODES, function (element, index) {
+         var d = RRule[element];
+-        tmpl += '<label class="inline">';
+-        tmpl += '<input type="checkbox" name="byweekday" value="' + d.weekday + '" />';
+-        tmpl += RRule.DAYNAMES[index] + '</label>';
++        // tmpl += '<label for="'+ (d.weekday + RRule.DAYNAMES[index]) +'" class="inline mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">';
++        // tmpl += '<input id="'+ (d.weekday + RRule.DAYNAMES[index]) +'" class="mdl-checkbox__input" type="checkbox" name="byweekday" value="' + d.weekday + '" />';
++        tmpl += '<label class="inline mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">';
++        tmpl += '<input class="mdl-checkbox__input" type="checkbox" name="byweekday" value="' + d.weekday + '" />';
++        tmpl += '<span class="mdl-checkbox__label">'+ RRule.DAYNAMES[index] +'</span>';
++        tmpl += '</label>';
+       });
+       tmpl += '</div>';
+ 
+       //bymonth: months
+       tmpl += '<div class="repeat-options controls container-inline" data-freq="monthly">';
+-      tmpl += Drupal.t('Only in', {}, {context: 'Date recur: month'})
++      tmpl += ' <label>';
++      tmpl += Drupal.t('Only in', {}, {context: 'Date recur: month'});
+       tmpl += ' </label>';
+       _.each(RRule.MONTHS, function (element, index) {
+-        tmpl += '<label class="inline">';
+-        tmpl += '<input type="checkbox" name="bymonth" value="' + (index + 1) + '" />';
+-        tmpl += element + '</label>';
++        tmpl += '<label class="inline mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">';
++        tmpl += '<input class="mdl-checkbox__input" type="checkbox" name="bymonth" value="' + (index + 1) + '" />';
++        tmpl += '<span class="mdl-checkbox__label">'+ element +'</span>';
++        tmpl += '</label>';
+       });
+       tmpl += '</div>';
+ 
+       //byweekday
+       tmpl += '<div class="repeat-options controls container-inline" data-freq="weekly">';
+       tmpl += '<label for="byweekday">';
+-      tmpl += Drupal.t('On', {}, {context: 'Date recur: weekday'})
++      tmpl += Drupal.t('Repeat on', {}, {context: 'Date recur: weekday'})
+       tmpl += ' </label>';
+       _.each(RRule.DAYCODES, function (element, index) {
+         var d = RRule[element];
+-        tmpl += '<label class="inline">';
+-        tmpl += '<input type="checkbox" name="byweekday" value="' + d.weekday + '" />';
+-        tmpl += RRule.DAYNAMES[index] + '</label>';
++        tmpl += '<label class="inline mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">';
++        tmpl += '<input class="mdl-checkbox__input" type="checkbox" name="byweekday" value="' + d.weekday + '" />';
++        tmpl += '<span class="mdl-checkbox__label">'+ RRule.DAYNAMES[index] +'</span>';
++        tmpl += '</label>';
+       });
+       tmpl += '</div>';
+ 
+       //byhour
+       tmpl += '<label class="repeat-options" data-freq="hourly">';
+-      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'})
+-      tmpl += ' <input name="byhour" /> <span>o\'clock</span></label>';
++      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'});
++      tmpl += '<div>';
++      tmpl += ' <input name="byhour" />';
++      tmpl += '<span>'+ Drupal.t('Hours', {}, {context: 'Date recur: time'}) +'</span>';
++      tmpl += '</div>';
++      tmpl += '</label>';
+ 
+       //byminute
+       tmpl += '<label class="repeat-options" data-freq="minutely">';
+-      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'})
+-      tmpl += ' <input name="byminute" />  <span>minutes<span></label>';
++      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'});
++      tmpl += '<div>';
++      tmpl += ' <input name="byminute" />';
++      tmpl += '<span>'+ Drupal.t('Minutes', {}, {context: 'Date recur: time'}) +'<span>';
++      tmpl += '</div>';
++      tmpl += '</label>';
+ 
+       //bysecond
+       tmpl += '<label class="repeat-options" data-freq="secondly">';
+-      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'})
+-      tmpl += ' <input name="bysecond" /> <span>seconds</span></label>';
++      tmpl += Drupal.t('Only at', {}, {context: 'Date recur: time'});
++      tmpl += '<div>';
++      tmpl += '<input name="bysecond" />';
++      tmpl += '<span>'+ Drupal.t('Seconds', {}, {context: 'Date recur: time'}) +'</span>';
++      tmpl += '</div>';
++      tmpl += '</label>';
+ 
+       // end repeat options
+-
+ 
+       // end on
+       this.end_input_name = 'end-' + widget_count;
+       tmpl += '<div class="end-options controls">';
+       tmpl += '<label for="' + this.end_input_name + '">';
+-      tmpl += Drupal.t('End', {}, {context: 'Date recur'})
++      tmpl += Drupal.t('Ends', {}, {context: 'Date recur'})
+       tmpl += ' </label>';
+ 
+-      tmpl += '<label class="inline">';
+-      tmpl += '<input type="radio" name="' + this.end_input_name + '" value="0" checked="checked" class="end-radio"/> ';
+-      tmpl += Drupal.t('Never', {}, {context: 'Date recur'})
++      tmpl += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect inline" for="' + this.end_input_name + '0">';
++      tmpl += '<input class="mdl-radio__button end-radio" id="' + this.end_input_name + '0" type="radio" name="' + this.end_input_name + '" value="0" checked/> ';
++      tmpl += '<span class="mdl-radio__label">';
++      tmpl += Drupal.t('Never', {}, {context: 'Date recur'});
++      tmpl += '</span>';
+       tmpl += '</label>';
+-      tmpl += '<label class="inline">';
+-      tmpl += '<input type="radio" name="' + this.end_input_name + '" value="1" class="end-radio" /> ';
+-      tmpl += Drupal.t('After !count occurrences', {'!count': '<input type="number" max="1000" min="1" value="" name="count"/> '}, {context: 'Date recur'})
++      tmpl += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect inline">';
++      tmpl += '<input class="mdl-radio__button end-radio" id="' + this.end_input_name + '1" type="radio" name="' + this.end_input_name + '" value="1"/> ';
++      tmpl += '<span class="mdl-radio__label">';
++      tmpl += Drupal.t('After !count Occurrences', {'!count': '<input type="number" max="1000" min="1" value="" name="count"/> '}, {context: 'Date recur'})
++      tmpl += '</span>';
+       tmpl += '</label>';
+-      tmpl += '<label class="inline">';
+-      tmpl += '<input type="radio" name="' + this.end_input_name + '" value="2" class="end-radio"> ';
+-      tmpl += Drupal.t('On date !date', {'!date': '<input type="date" name="until"/>'}, {context: 'Date recur'})
++      tmpl += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect inline" for="' + this.end_input_name + '2">';
++      tmpl += '<input class="mdl-radio__button end-radio" id="' + this.end_input_name + '2" type="radio" name="' + this.end_input_name + '" value="2"/> ';
++      tmpl += '<span class="mdl-radio__label">';
++      tmpl += Drupal.t('On !date', {'!date': '<input type="date" name="until"/>'}, {context: 'Date recur'})
++      tmpl += '</span>';
+       tmpl += '</label>';
+ 
+       tmpl += '</div>';
+ 
+       // exclude/include
+-      tmpl += '<div class="exlude-include-options controls">';
+-      tmpl += '<label for="exclude-include">';
+-      tmpl += Drupal.t('Exclude/include dates', {}, {context: 'Date recur'});
+-      tmpl += ' </label>';
+-      tmpl += '<label class="inline">';
+-      tmpl += '<select name="exinc-type">';
+-      tmpl += '<option value="exclude">' + Drupal.t('Exclude') + '</option>';
+-      tmpl += '<option value="include">' + Drupal.t('Include') + '</option>';
+-      tmpl += '</select>';
+-      tmpl += '<input type="date" name="exinc-date" />';
+-      tmpl += '<input type="button" name="exinc-add" value="Add" />';
+-      tmpl += '</label>';
+-      tmpl += '<div class="exinc-dates-container"></div>'
+-      tmpl += '</div>';
++      // tmpl += '<div class="exlude-include-options controls">';
++      // tmpl += '<label for="exclude-include">';
++      // tmpl += Drupal.t('Exclude/include dates', {}, {context: 'Date recur'});
++      // tmpl += ' </label>';
++      // tmpl += '<label class="inline">';
++      // tmpl += '<select name="exinc-type">';
++      // tmpl += '<option value="exclude">' + Drupal.t('Exclude') + '</option>';
++      // tmpl += '<option value="include">' + Drupal.t('Include') + '</option>';
++      // tmpl += '</select>';
++      // tmpl += '<input type="date" name="exinc-date" />';
++      // tmpl += '<input type="button" name="exinc-add" value="Add" />';
++      // tmpl += '</label>';
++      // tmpl += '<div class="exinc-dates-container"></div>'
++      // tmpl += '</div>';
+ 
+       // summary
+-      tmpl += '<label for="output">';
+-      tmpl += Drupal.t('Summary', {}, {context: 'Date recur'})
+-      tmpl += ': <em class="text-output"></em></label>'; // human readable
+-      tmpl += '<label>' + Drupal.t('RRule') + ':<code class="rrule-output"></code></label>'; // ugly rrule
++      tmpl += '<label class="resume-recurrency" for="output">';
++      tmpl += Drupal.t('Summary', {}, {context: 'Date recur'});
++      tmpl += ': <span class="text-output"></span></label>'; // human readable
++      //tmpl += '<label>' + Drupal.t('RRule') + ':<code class="rrule-output"></code></label>'; // ugly rrule
+ 
+       //TODO: show next few instances to help user debug
+ 
+@@ -318,7 +340,6 @@
+     _applyRRule: function (rrule) {
+       var opts = rrule._rrule[0].options;
+       var freq = RRule.FREQUENCY_NAMES[opts.freq].toLowerCase();
+-
+       // split byweekday.
+       var byweekdayPos = [];
+       if (opts.byweekday == null) {
+@@ -337,7 +358,6 @@
+         return a - b;
+       });
+       opts['byweekday-pos'] = byweekdayPos;
+-
+ 
+       var $sel = $('[data-freq!=' + freq + ']', this.element);
+       var k;
+@@ -426,9 +446,14 @@
+ 
+         //and clear descendent fields for the others
+         var nonSelectedOptions = repeatOptions.filter('[data-freq!=' + frequency_text + ']');
++        nonSelectedOptions.find('input[type=checkbox]:checked').parent().removeClass('is-checked');
+         nonSelectedOptions.find('input[type=checkbox]:checked').removeAttr('checked');
+         nonSelectedOptions.find('input[type!=checkbox]').val('');
+         nonSelectedOptions.find('select').val('');
++
++        if (typeof componentHandler != 'undefined') {
++          componentHandler.upgradeDom();
++        }
+       }
+ 
+       //reset end
+@@ -485,6 +510,7 @@
+       if (rrule) {
+         $('.rrule-output', this.element).text(rrule.valueOf().join("\n"));
+         $('.text-output', this.element).text(this._getHumanReadable(rrule));
++        $('.resume-data-recur').text(this._getHumanReadable(rrule));
+         this.element.trigger('rrule-update');
+       }
+     },
+@@ -492,6 +518,7 @@
+     _getHumanReadable: function(rrule) {
+       var that = this;
+       var text = '';
++
+       if (rrule._rrule[0]) {
+         text = text + rrule._rrule[0].toText();
+       }
+@@ -563,7 +590,7 @@
+         if (!v) {
+           continue;
+         }
+-        if (_.contains(["dtstart", "until"], k)) {
++        if (_.includes(["dtstart", "until"], k)) {
+           v = this._parseDate(v);
+         } else if (k === 'byweekday') {
+           if (v instanceof Array) {
+@@ -601,6 +628,8 @@
+       var rule, type, key;
+       try {
+         rule = new RRule.RRuleSet();
++        // Fix for work with Material Design Lite
++        delete options['end-0'];
+         rule.rrule(new RRule(options));
+         for (type in dates) {
+           for (key in dates[type]) {
+@@ -662,4 +691,4 @@
+       $.Widget.prototype.destroy.apply(this);
+     }
+   });
+-}(jQuery, Drupal, Modernizr, RRule));
++}(jQuery, Drupal, Modernizr, RRule));
+\ No newline at end of file
+
